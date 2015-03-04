@@ -3,7 +3,6 @@
 module Greek.Parsers.BetaParser (
 	parseWord
   , cleanUp
-  , parseDoc
 	) where
 
 import           Data.Attoparsec.Text
