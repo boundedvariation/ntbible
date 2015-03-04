@@ -53,6 +53,7 @@ library
   -- Modules exported by the library.
   exposed-modules:     
     Greek.Parsers.BetaParser
+    Greek.Dictionary.Types
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -63,7 +64,8 @@ library
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.7 && <4.8,
                        attoparsec,
-                       text
+                       text,
+                       containers
   
   -- Directories containing source files.
   -- hs-source-dirs:      
