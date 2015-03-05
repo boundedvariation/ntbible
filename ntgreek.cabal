@@ -54,6 +54,7 @@ library
   exposed-modules:     
     Greek.Parsers.BetaParser
     Greek.Dictionary.Types
+    Greek.Dictionary.DictionaryParser
   
   -- Modules included in this library but not exported.
   -- other-modules:       
