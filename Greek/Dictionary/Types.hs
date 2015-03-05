@@ -12,7 +12,7 @@ module Greek.Dictionary.Types (
   , NumberGr(..)
   , Gender(..)
   , Case(..)
-  , Dialect(..)
+  , Dialect
   , Person(..)
   , Tense(..)
   , Mood(..)
@@ -20,6 +20,7 @@ module Greek.Dictionary.Types (
   , MorphLookup
   , Morphology(..)
   , Infinitive(..)
+  , Feature
 	) where
 
 import qualified Data.Text as T
@@ -34,16 +35,12 @@ data Gender = Masculine
 			| Neuter deriving (Eq, Show)
 
 data Case = Nominative 
-		  | Genetive 
+		  | Genitive 
 		  | Accusative 
 		  | Dative 
 		  | Vocative deriving (Eq, Show)
 
-data Dialect = Attic 
-			 | Ionic 
-			 | Homeric 
-			 | Koine 
-			 | Aeolic deriving (Eq, Show)
+type Dialect = T.Text
 
 data Person = First 
 			| Second 
@@ -81,7 +78,7 @@ data Morphology = MorphNoun Noun
 				| MorphPron Pronoun deriving (Eq,Show)
 
 data Noun = Noun {
-	nounNumber     :: NumberGr
+	  nounNumber     :: NumberGr
   , nounGender     :: Gender
   , nounCase       :: Case
   , nounDialect    :: [Dialect]
