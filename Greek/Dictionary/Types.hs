@@ -9,7 +9,7 @@ module Greek.Dictionary.Types (
   , Participle(..)
   , Adjective(..)
   , Pronoun(..)
-  , Number(..)
+  , NumberGr(..)
   , Gender(..)
   , Case(..)
   , Dialect(..)
@@ -19,14 +19,15 @@ module Greek.Dictionary.Types (
   , Voice(..)
   , MorphLookup
   , Morphology(..)
+  , Infinitive(..)
 	) where
 
 import qualified Data.Text as T
 import qualified Data.Map as M
 
-data Number = Singular 
-			| Plural 
-			| Dual deriving (Eq, Show)
+data NumberGr = Singular 
+			  | Plural 
+			  | Dual deriving (Eq, Show)
 
 data Gender = Masculine 
 			| Feminine 
@@ -55,9 +56,9 @@ data Tense = Present
 		   | Pluperfect deriving (Eq, Show)
 
 data Mood =  Indicative
+		   | Imperative
 		   | Subjunctive
-		   | Optative
-		   | Infinitive deriving (Eq, Show)
+		   | Optative deriving (Eq, Show)
 
 data Voice = Active
 		   | Passive
@@ -80,7 +81,7 @@ data Morphology = MorphNoun Noun
 				| MorphPron Pronoun deriving (Eq,Show)
 
 data Noun = Noun {
-	nounNumber     :: Number
+	nounNumber     :: NumberGr
   , nounGender     :: Gender
   , nounCase       :: Case
   , nounDialect    :: [Dialect]
@@ -89,7 +90,7 @@ data Noun = Noun {
 
 data Verb = Verb {
 	verbPerson :: Person
-  , verbNumber :: Number
+  , verbNumber :: NumberGr
   , verbTense  :: Tense
   , verbMood   :: Mood
   , verbVoice  :: Voice
@@ -99,7 +100,7 @@ data Verb = Verb {
 data Preposition = Preposition Feature deriving (Eq,Show)
 
 data Participle = Participle {
-	partNumber :: Number
+	partNumber :: NumberGr
   , partTense  :: Tense
   , partVoice  :: Voice
   , partGender :: Gender
@@ -107,7 +108,7 @@ data Participle = Participle {
 } deriving (Eq,Show)
 
 data Adjective = Adjective {
-	adjNumber  ::  Number
+	adjNumber  ::  NumberGr
   , adjGender  ::  Gender
   , adjCase    ::  Case
   , adjDialect :: [Dialect]
@@ -118,8 +119,15 @@ data Adverb = Adverb Feature deriving (Eq,Show)
 
 data Pronoun = Pronoun {
 	pronPerson  :: Person
-  , pronNumber  :: Number
+  , pronNumber  :: NumberGr
   , pronGender  :: Gender
   , pronCase    :: Case
   , pronFeature :: Feature
 } deriving (Eq,Show)
+
+data Infinitive = Infinitive {
+	infTense :: Tense
+  , infVoice :: Voice
+  , infDialect :: [Dialect]
+  , infFeature :: Feature
+}
