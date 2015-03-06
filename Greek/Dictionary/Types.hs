@@ -20,6 +20,10 @@ module Greek.Dictionary.Types (
   , MorphLookup
   , Morphology(..)
   , Infinitive(..)
+  , Exclamation(..)
+  , Adverbial(..)
+  , Conjunction(..)
+  , Particle(..)
   , Feature
 	) where
 
@@ -32,7 +36,8 @@ data NumberGr = Singular
 
 data Gender = Masculine 
 			| Feminine 
-			| Neuter deriving (Eq, Show)
+			| Neuter
+      | NoGender deriving (Eq, Show)
 
 data Case = Nominative 
 		  | Genitive 
@@ -44,13 +49,15 @@ type Dialect = T.Text
 
 data Person = First 
 			| Second 
-			| Third deriving (Eq, Show)
+			| Third
+      | NoPerson deriving (Eq, Show)
 
 data Tense = Present 
 		   | Imperfect 
 		   | Aorist 
 		   | Perfect
        | Future
+       | FuturePerfect
 		   | Pluperfect deriving (Eq, Show)
 
 data Mood =  Indicative
@@ -60,7 +67,8 @@ data Mood =  Indicative
 
 data Voice = Active
 		   | Passive
-		   | Middle deriving (Eq, Show)
+		   | Middle
+       | MidPass deriving (Eq, Show)
 
 type Feature = T.Text
 
@@ -69,7 +77,9 @@ type MorphLookup = M.Map T.Text MorphEntry
 data MorphEntry = MorphEntry {
 	   lemma      :: T.Text
   ,  wordForm   :: T.Text
-  ,	 morphology :: Morphology } deriving (Eq,Show)
+  ,	 morphology :: Morphology
+  ,  dialect    :: [Dialect]
+  ,  feature    :: Feature  } deriving (Eq,Show)
 
 data Morphology = MorphNoun Noun 
 				| MorphVerb Verb 
@@ -78,14 +88,16 @@ data Morphology = MorphNoun Noun
 				| MorphAdj  Adjective
 				| MorphAdv  Adverb
         | MorphInf  Infinitive
-				| MorphPron Pronoun deriving (Eq,Show)
+        | MorphExcl Exclamation
+				| MorphPron Pronoun
+        | MorphConj Conjunction
+        | MorphParc Particle
+        | MorphAdvl Adverbial deriving (Eq,Show)
 
 data Noun = Noun {
 	  nounNumber     :: NumberGr
   , nounGender     :: Gender
   , nounCase       :: Case
-  , nounDialect    :: [Dialect]
-  , nounFeature    :: Feature
 } deriving (Eq,Show)
 
 data Verb = Verb {
@@ -94,11 +106,11 @@ data Verb = Verb {
   , verbTense   :: Tense
   , verbMood    :: Mood
   , verbVoice   :: Voice
-  , verbDialect :: [Dialect]
-  , verbFeature :: Feature
 } deriving (Eq,Show)
 
-data Preposition = Preposition Feature deriving (Eq,Show)
+data Preposition = Preposition deriving (Eq,Show)
+
+data Exclamation = Exclamation deriving (Eq,Show)
 
 data Participle = Participle {
 	  partNumber  :: NumberGr
@@ -106,31 +118,30 @@ data Participle = Participle {
   , partVoice   :: Voice
   , partGender  :: Gender
   , partCase    :: Case
-  , partDialect :: [Dialect]
-  , partFeature :: Feature
 } deriving (Eq,Show)
 
 data Adjective = Adjective {
 	  adjNumber  ::  NumberGr
   , adjGender  ::  Gender
   , adjCase    ::  Case
-  , adjDialect :: [Dialect]
-  , adjFeature :: Feature
 } deriving (Eq,Show)
 
-data Adverb = Adverb Feature deriving (Eq,Show)
+data Adverb = Adverb deriving (Eq,Show)
 
 data Pronoun = Pronoun {
-    pronNumber  :: NumberGr
+    pronPerson  :: Person
+  , pronNumber  :: NumberGr
   , pronGender  :: Gender
   , pronCase    :: Case
-  , pronDialect :: [Dialect]
-  , pronFeature :: Feature
 } deriving (Eq,Show)
 
 data Infinitive = Infinitive {
 	  infTense :: Tense
   , infVoice :: Voice
-  , infDialect :: [Dialect]
-  , infFeature :: Feature
 } deriving (Eq,Show)
+
+data Adverbial = Adverbial deriving (Eq,Show)
+
+data Conjunction = Conjunction deriving (Eq,Show)
+
+data Particle = Particle deriving (Eq,Show)
