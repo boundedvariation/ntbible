@@ -36,7 +36,9 @@ featureParser :: Parser Feature
 featureParser = xmlWrapper "feature" $ takeTill (=='<')
 
 numParser :: Parser NumberGr
-numParser = xmlWrapper "number" $ parserMap [
+numParser = option NoNumber 
+	$ xmlWrapper "number" 
+	$ parserMap [
 		("sg"  , Singular)
 	  , ("dual", Dual    )
 	  , ("pl"  , Plural  )
@@ -52,7 +54,9 @@ genderParser = option NoGender
 	]
 
 caseParser :: Parser Case
-caseParser = xmlWrapper "case" $ parserMap [
+caseParser = option NoCase
+  $ xmlWrapper "case" 
+  $ parserMap [
 		("nom" , Nominative)
 	  ,	("acc" , Accusative)
 	  ,	("gen" , Genitive  )
@@ -70,18 +74,22 @@ personParser = option NoPerson
 	 ]
 
 tenseParser :: Parser Tense
-tenseParser = xmlWrapper "tense" $ parserMap [
+tenseParser = option NoTense 
+	$ xmlWrapper "tense" 
+	$ parserMap [
 	   ("pres"   , Present)
 	 , ("imperf" , Imperfect)
+	 , ("futperf", FuturePerfect)
 	 , ("fut"    , Future)
 	 , ("aor"    , Aorist)
 	 , ("perf"   , Perfect)
-	 , ("futperf", FuturePerfect)
 	 , ("plup"   , Pluperfect)
 	 ]
 
 moodParser :: Parser Mood
-moodParser = xmlWrapper "mood" $ parserMap [
+moodParser = option NoMood
+  $ xmlWrapper "mood" 
+  $ parserMap [
 	   ("ind"     , Indicative )
 	 , ("imperat" , Imperative )
 	 , ("subj"    , Subjunctive)
@@ -89,11 +97,21 @@ moodParser = xmlWrapper "mood" $ parserMap [
 	 ]
 
 voiceParser :: Parser Voice
-voiceParser = xmlWrapper "voice" $ parserMap [
+voiceParser = option NoVoice
+  $ xmlWrapper "voice" 
+  $ parserMap [
 	   ("act" , Active )
 	 , ("pass", Passive)
 	 , ("mid" , Middle )
 	 , ("mp"  , MidPass)
+	 ]
+
+degParser :: Parser Degree
+degParser = option NoDegree 
+	$ xmlWrapper "degree" 
+	$ parserMap [
+	   ("comp" , Comparative )
+	 , ("superl"  , Superlative)
 	 ]
 
 entryParser :: Parser MorphEntry
@@ -101,17 +119,20 @@ entryParser = tok $ xmlWrapper "analysis" $ tok $ do
 	frm <- xmlWrapper "form"  $ takeTill (=='<')
 	lma <- xmlWrapper "lemma" $ takeTill (=='<')
 	mrph <- tok $ (MorphNoun <$> nounParser)
+		<|> (MorphInf  <$> infParser)
 		<|> (MorphVerb <$> verbParser)
 		<|> (MorphPron <$> pronounParser)
 		<|> (MorphAdj  <$> adjParser)
 		<|> (MorphPart <$> partParser)
-		<|> (MorphInf  <$> infParser)
 		<|> (MorphAdv  <$> advParser)
 		<|> (MorphPrep <$> prepParser)
 		<|> (MorphExcl <$> exclParser)
 		<|> (MorphAdvl <$> advlParser)
 		<|> (MorphConj <$> conjParser)
 		<|> (MorphParc <$> parcParser)
+		<|> (MorphArt  <$> artParser)
+		<|> (MorphNum  <$> numeralParser)
+		<|> (MorphIrr  <$> irrParser)
 	d <- option [T.empty] dialectParser
 	f <- option T.empty featureParser 
 	return $ MorphEntry frm lma mrph d f
@@ -122,7 +143,7 @@ verbParser = string "<pos>verb</pos>" >>
 		 <*> numParser
 		 <*> tenseParser
 		 <*> moodParser
-		 <*> voiceParser
+		 <*> (voiceParser <* (genderParser >> caseParser)) --for *)/aracon
 
 infParser :: Parser Infinitive
 infParser = string "<pos>verb</pos>" >>
@@ -141,6 +162,7 @@ adjParser = string "<pos>adj</pos>" >>
 	Adjective <$> numParser 
 		      <*> genderParser
 		      <*> caseParser 
+		      <*> degParser
 
 partParser :: Parser Participle
 partParser = string "<pos>part</pos>" >>
@@ -155,25 +177,50 @@ pronounParser = string "<pos>pron</pos>" >>
 	Pronoun <$> personParser
 			<*> numParser 
 		    <*> genderParser
-		    <*> caseParser 
+		    <*> caseParser
+
+artParser :: Parser Article
+artParser = string "<pos>article</pos>" >>
+	Article <$> numParser 
+		    <*> genderParser
+		    <*> caseParser
+
 
 advParser :: Parser Adverb
-advParser = "<pos>adv</pos>" *> return Adverb
+advParser = string "<pos>adv</pos>" >> 
+	Adverb <$> (degParser <* (numParser >> genderParser >> caseParser)) -- for be/nqosde / o(/n
 
 prepParser :: Parser Preposition
-prepParser = "<pos>prep</pos>" *> return Preposition
+prepParser = string "<pos>prep</pos>" >> 
+	Preposition <$> degParser
 
 exclParser :: Parser Exclamation
 exclParser = "<pos>exclam</pos>" *> return Exclamation
 
 advlParser :: Parser Adverbial
-advlParser = "<pos>adverbial</pos>" *> return Adverbial
+advlParser = string "<pos>adverbial</pos>" >>
+	Adverbial <$> degParser
 
 conjParser :: Parser Conjunction
 conjParser = "<pos>conj</pos>" *> return Conjunction
 
 parcParser :: Parser Particle
 parcParser = "<pos>partic</pos>" *> return Particle
+
+irrParser :: Parser Irregular
+irrParser = do
+	string "<pos>irreg</pos>"
+	numParser
+	genderParser
+	caseParser
+	return Irregular
+
+numeralParser :: Parser Numeral
+numeralParser = do
+	string "<pos>numeral</pos>"
+	Numeral <$> numParser
+			<*> genderParser
+			<*> caseParser
 
 xmlWrapper :: T.Text -> Parser a -> Parser a
 xmlWrapper st p = do

@@ -24,6 +24,10 @@ module Greek.Dictionary.Types (
   , Adverbial(..)
   , Conjunction(..)
   , Particle(..)
+  , Article(..)
+  , Numeral(..)
+  , Degree(..)
+  , Irregular(..)
   , Feature
 	) where
 
@@ -32,7 +36,12 @@ import qualified Data.Map as M
 
 data NumberGr = Singular 
 			  | Plural 
-			  | Dual deriving (Eq, Show)
+			  | Dual
+        | NoNumber deriving (Eq, Show)
+
+data Degree = NoDegree
+        | Comparative
+        | Superlative deriving (Eq, Show)
 
 data Gender = Masculine 
 			| Feminine 
@@ -43,7 +52,8 @@ data Case = Nominative
 		  | Genitive 
 		  | Accusative 
 		  | Dative 
-		  | Vocative deriving (Eq, Show)
+		  | Vocative
+      | NoCase deriving (Eq, Show)
 
 type Dialect = T.Text
 
@@ -58,17 +68,20 @@ data Tense = Present
 		   | Perfect
        | Future
        | FuturePerfect
-		   | Pluperfect deriving (Eq, Show)
+		   | Pluperfect
+       | NoTense deriving (Eq, Show)
 
 data Mood =  Indicative
 		   | Imperative
 		   | Subjunctive
-		   | Optative deriving (Eq, Show)
+		   | Optative
+       | NoMood deriving (Eq, Show)
 
 data Voice = Active
 		   | Passive
 		   | Middle
-       | MidPass deriving (Eq, Show)
+       | MidPass
+       | NoVoice deriving (Eq, Show)
 
 type Feature = T.Text
 
@@ -92,7 +105,10 @@ data Morphology = MorphNoun Noun
 				| MorphPron Pronoun
         | MorphConj Conjunction
         | MorphParc Particle
-        | MorphAdvl Adverbial deriving (Eq,Show)
+        | MorphArt  Article
+        | MorphNum  Numeral
+        | MorphAdvl Adverbial
+        | MorphIrr  Irregular deriving (Eq,Show)
 
 data Noun = Noun {
 	  nounNumber     :: NumberGr
@@ -108,7 +124,9 @@ data Verb = Verb {
   , verbVoice   :: Voice
 } deriving (Eq,Show)
 
-data Preposition = Preposition deriving (Eq,Show)
+data Preposition = Preposition {
+   prepDegree :: Degree
+} deriving (Eq,Show)
 
 data Exclamation = Exclamation deriving (Eq,Show)
 
@@ -124,9 +142,12 @@ data Adjective = Adjective {
 	  adjNumber  ::  NumberGr
   , adjGender  ::  Gender
   , adjCase    ::  Case
+  , adjDeg     ::  Degree
 } deriving (Eq,Show)
 
-data Adverb = Adverb deriving (Eq,Show)
+data Adverb = Adverb {
+    advDegree :: Degree
+} deriving (Eq,Show)
 
 data Pronoun = Pronoun {
     pronPerson  :: Person
@@ -140,8 +161,24 @@ data Infinitive = Infinitive {
   , infVoice :: Voice
 } deriving (Eq,Show)
 
-data Adverbial = Adverbial deriving (Eq,Show)
+data Article = Article {
+    artNumber :: NumberGr
+  , artGender :: Gender
+  , artCase   :: Case
+} deriving (Eq,Show)
+
+data Adverbial = Adverbial {
+  advlDegree :: Degree
+} deriving (Eq,Show)
 
 data Conjunction = Conjunction deriving (Eq,Show)
 
 data Particle = Particle deriving (Eq,Show)
+
+data Numeral = Numeral {
+    numlNumber :: NumberGr
+  , numlGender :: Gender
+  , numlCase   :: Case 
+} deriving (Eq,Show)
+
+data Irregular = Irregular deriving (Eq,Show)
