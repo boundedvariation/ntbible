@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Greek.Dictionary.Types (
-	MorphEntry(..)
+  MorphEntry(..)
   , Noun(..)
   , Verb(..)
   , Preposition(..)
@@ -29,14 +29,14 @@ module Greek.Dictionary.Types (
   , Degree(..)
   , Irregular(..)
   , Feature
-	) where
+  ) where
 
 import qualified Data.Text as T
 import qualified Data.Map as M
 
 data NumberGr = Singular 
-			  | Plural 
-			  | Dual
+        | Plural 
+        | Dual
         | NoNumber deriving (Eq, Show)
 
 data Degree = NoDegree
@@ -44,42 +44,42 @@ data Degree = NoDegree
         | Superlative deriving (Eq, Show)
 
 data Gender = Masculine 
-			| Feminine 
-			| Neuter
+      | Feminine 
+      | Neuter
       | NoGender deriving (Eq, Show)
 
 data Case = Nominative 
-		  | Genitive 
-		  | Accusative 
-		  | Dative 
-		  | Vocative
+      | Genitive 
+      | Accusative 
+      | Dative 
+      | Vocative
       | NoCase deriving (Eq, Show)
 
 type Dialect = T.Text
 
 data Person = First 
-			| Second 
-			| Third
+      | Second 
+      | Third
       | NoPerson deriving (Eq, Show)
 
 data Tense = Present 
-		   | Imperfect 
-		   | Aorist 
-		   | Perfect
+       | Imperfect 
+       | Aorist 
+       | Perfect
        | Future
        | FuturePerfect
-		   | Pluperfect
+       | Pluperfect
        | NoTense deriving (Eq, Show)
 
 data Mood =  Indicative
-		   | Imperative
-		   | Subjunctive
-		   | Optative
+       | Imperative
+       | Subjunctive
+       | Optative
        | NoMood deriving (Eq, Show)
 
 data Voice = Active
-		   | Passive
-		   | Middle
+       | Passive
+       | Middle
        | MidPass
        | NoVoice deriving (Eq, Show)
 
@@ -88,21 +88,21 @@ type Feature = T.Text
 type MorphLookup = M.Map T.Text MorphEntry
 
 data MorphEntry = MorphEntry {
-	   lemma      :: T.Text
+     lemma      :: T.Text
   ,  wordForm   :: T.Text
-  ,	 morphology :: Morphology
+  ,  morphology :: Morphology
   ,  dialect    :: [Dialect]
   ,  feature    :: Feature  } deriving (Eq,Show)
 
 data Morphology = MorphNoun Noun 
-				| MorphVerb Verb 
-				| MorphPrep Preposition
-				| MorphPart Participle
-				| MorphAdj  Adjective
-				| MorphAdv  Adverb
+        | MorphVerb Verb 
+        | MorphPrep Preposition
+        | MorphPart Participle
+        | MorphAdj  Adjective
+        | MorphAdv  Adverb
         | MorphInf  Infinitive
         | MorphExcl Exclamation
-				| MorphPron Pronoun
+        | MorphPron Pronoun
         | MorphConj Conjunction
         | MorphParc Particle
         | MorphArt  Article
@@ -111,13 +111,13 @@ data Morphology = MorphNoun Noun
         | MorphIrr  Irregular deriving (Eq,Show)
 
 data Noun = Noun {
-	  nounNumber     :: NumberGr
+    nounNumber     :: NumberGr
   , nounGender     :: Gender
   , nounCase       :: Case
 } deriving (Eq,Show)
 
 data Verb = Verb {
-	  verbPerson  :: Person
+    verbPerson  :: Person
   , verbNumber  :: NumberGr
   , verbTense   :: Tense
   , verbMood    :: Mood
@@ -131,7 +131,7 @@ data Preposition = Preposition {
 data Exclamation = Exclamation deriving (Eq,Show)
 
 data Participle = Participle {
-	  partNumber  :: NumberGr
+    partNumber  :: NumberGr
   , partTense   :: Tense
   , partVoice   :: Voice
   , partGender  :: Gender
@@ -139,7 +139,7 @@ data Participle = Participle {
 } deriving (Eq,Show)
 
 data Adjective = Adjective {
-	  adjNumber  ::  NumberGr
+    adjNumber  ::  NumberGr
   , adjGender  ::  Gender
   , adjCase    ::  Case
   , adjDeg     ::  Degree
@@ -157,7 +157,7 @@ data Pronoun = Pronoun {
 } deriving (Eq,Show)
 
 data Infinitive = Infinitive {
-	  infTense :: Tense
+    infTense :: Tense
   , infVoice :: Voice
 } deriving (Eq,Show)
 
