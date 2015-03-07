@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Greek.Parsers.BetaParser (
-	parseWord
+    parseWord
   , cleanUp
-	) where
+    ) where
 
 import           Data.Attoparsec.Text
 import           Control.Applicative
@@ -12,7 +12,7 @@ import           Data.Char
 
 cleanUp :: T.Text -> T.Text
 cleanUp st = T.filter f $ T.toUpper st
-	where f = not . (`elem` validChars)
+    where f = not . (`elem` validChars)
 
 parseLetter :: Parser Char
 parseLetter = parseVowel <|> parseConsonant
@@ -25,36 +25,36 @@ parseConsonant = parseCase $ satisfy (`elem` "BCDFGKLMNPQRSTVXYZ")
 
 parseCase :: Parser Char -> Parser Char
 parseCase p = (char '*' >> fmap (toUpper . betaConvert) p)
-	<|> fmap betaConvert p
+    <|> fmap betaConvert p
 
 betaConvert :: Char -> Char
 betaConvert x = case x of
-	'A' -> 'α'
-	'B' -> 'β'
-	'C' -> 'ξ'
-	'D' -> 'δ'
-	'E' -> 'ε'
-	'F' -> 'φ'
-	'G' -> 'γ'
-	'H' -> 'η'
-	'I' -> 'ι'
-	'K' -> 'κ'
-	'L' -> 'λ'
-	'M' -> 'μ'
-	'N' -> 'ν'
-	'O' -> 'ο'
-	'P' -> 'π'
-	'Q' -> 'θ'
-	'R' -> 'ρ'
-	'S' -> 'σ'
-	'T' -> 'τ'
-	'U' -> 'υ'
-	'V' -> 'ϝ'
-	'W' -> 'ω'
-	'X' -> 'χ'
-	'Y' -> 'ψ'
-	'Z' -> 'ζ'
-	_ -> error "Invalid beta code point."
+    'A' -> 'α'
+    'B' -> 'β'
+    'C' -> 'ξ'
+    'D' -> 'δ'
+    'E' -> 'ε'
+    'F' -> 'φ'
+    'G' -> 'γ'
+    'H' -> 'η'
+    'I' -> 'ι'
+    'K' -> 'κ'
+    'L' -> 'λ'
+    'M' -> 'μ'
+    'N' -> 'ν'
+    'O' -> 'ο'
+    'P' -> 'π'
+    'Q' -> 'θ'
+    'R' -> 'ρ'
+    'S' -> 'σ'
+    'T' -> 'τ'
+    'U' -> 'υ'
+    'V' -> 'ϝ'
+    'W' -> 'ω'
+    'X' -> 'χ'
+    'Y' -> 'ψ'
+    'Z' -> 'ζ'
+    _ -> error "Invalid beta code point."
 
 parseVowel :: Parser Char
 parseVowel = parseCase $ choice [
@@ -178,7 +178,7 @@ parseVowel = parseCase $ choice [
  , "W=" *> return 'ῶ'
  , "W|" *> return 'ῳ'
  , "W" *> return 'ω'
-	]
+    ]
 
 validChars :: String
 validChars = "*)(/=\\+|.ABCDEFGHIKLMNOPQRSTUVWXYZ,:;-_"
