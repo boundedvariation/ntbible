@@ -35,28 +35,28 @@ dialectParser = xmlWrapper "dialect" $
 featureParser :: Parser Feature
 featureParser = xmlWrapper "feature" $ takeTill (=='<')
 
-numParser :: Parser NumberGr
-numParser = option NoNumber 
+numParser :: Parser (Maybe NumberGr)
+numParser = option Nothing 
     $ xmlWrapper "number" 
-    $ parserMap [
+    $ Just <$> parserMap [
         ("sg"  , Singular)
       , ("dual", Dual    )
       , ("pl"  , Plural  )
     ]
 
-genderParser :: Parser Gender
-genderParser = option NoGender 
+genderParser :: Parser (Maybe Gender)
+genderParser = option Nothing
     $ xmlWrapper "gender" 
-    $ parserMap [
+    $ Just <$> parserMap [
         ("masc", Masculine)
       , ("fem" , Feminine )
       , ("neut",  Neuter  )
     ]
 
-caseParser :: Parser Case
-caseParser = option NoCase
+caseParser :: Parser (Maybe Case)
+caseParser = option Nothing
   $ xmlWrapper "case" 
-  $ parserMap [
+  $ Just <$> parserMap [
         ("nom" , Nominative)
       , ("acc" , Accusative)
       , ("gen" , Genitive  )
@@ -64,19 +64,19 @@ caseParser = option NoCase
       , ("dat" , Dative    )
     ]
 
-personParser :: Parser Person
-personParser = option NoPerson
+personParser :: Parser (Maybe Person)
+personParser = option Nothing
   $ xmlWrapper "person" 
-  $ parserMap [
+  $ Just <$> parserMap [
        ("1st" , First)
      , ("2nd" , Second)
      , ("3rd" , Third)
      ]
 
-tenseParser :: Parser Tense
-tenseParser = option NoTense 
+tenseParser :: Parser (Maybe Tense)
+tenseParser = option Nothing 
     $ xmlWrapper "tense" 
-    $ parserMap [
+    $ Just <$> parserMap [
        ("pres"   , Present)
      , ("imperf" , Imperfect)
      , ("futperf", FuturePerfect)
@@ -86,30 +86,30 @@ tenseParser = option NoTense
      , ("plup"   , Pluperfect)
      ]
 
-moodParser :: Parser Mood
-moodParser = option NoMood
+moodParser :: Parser (Maybe Mood)
+moodParser = option Nothing
   $ xmlWrapper "mood" 
-  $ parserMap [
+  $ Just <$> parserMap [
        ("ind"     , Indicative )
      , ("imperat" , Imperative )
      , ("subj"    , Subjunctive)
      , ("opt"     , Optative   )
      ]
 
-voiceParser :: Parser Voice
-voiceParser = option NoVoice
+voiceParser :: Parser (Maybe Voice)
+voiceParser = option Nothing
   $ xmlWrapper "voice" 
-  $ parserMap [
+  $ Just <$> parserMap [
        ("act" , Active )
      , ("pass", Passive)
      , ("mid" , Middle )
      , ("mp"  , MidPass)
      ]
 
-degParser :: Parser Degree
-degParser = option NoDegree 
+degParser :: Parser (Maybe Degree)
+degParser = option Nothing
     $ xmlWrapper "degree" 
-    $ parserMap [
+    $ Just <$> parserMap [
        ("comp" , Comparative )
      , ("superl"  , Superlative)
      ]
