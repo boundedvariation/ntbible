@@ -31,9 +31,6 @@ module Greek.Dictionary.Types (
   , Degree(..)
   , Irregular(..)
   , Feature
-  , Key
-  , Value
-  , Database(..)
   ) where
 
 import Data.Typeable
@@ -183,12 +180,6 @@ data Numeral = Numeral {
 
 data Irregular = Irregular deriving (Eq,Show,Typeable)
 
-type Key = T.Text
-type Value = MorphEntry
-
-data Database = Database !(M.Map Key [Value])
-  deriving (Show,Eq,Typeable)
-
 $(deriveSafeCopy 0 'base ''Case)
 $(deriveSafeCopy 0 'base ''Degree)
 $(deriveSafeCopy 0 'base ''NumberGr)
@@ -214,4 +205,3 @@ $(deriveSafeCopy 0 'base ''Particle)
 $(deriveSafeCopy 0 'base ''Verb)
 $(deriveSafeCopy 0 'base ''Morphology)
 $(deriveSafeCopy 0 'base ''MorphEntry)
-$(deriveSafeCopy 0 'base ''Database)
