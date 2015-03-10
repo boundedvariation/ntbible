@@ -2,12 +2,26 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Greek.Dictionary.MorphologyMap (
+module Greek.Dictionary.MorphologyDB (
     createMap
   , createMapFromFile
+  , lookupKey
+  , insertKey
+  , deleteKey
+  , allKeys
+  , LookupKey(..)
+  , InsertKey(..)
+  , DeleteKey(..)
+  , AllKeys(..)
+  , createMapASFile
+  , Database(..)
+  , Key
+  , Value
 	) where
 
 import Data.Acid
+import Data.Typeable
+import Data.SafeCopy
 import Greek.Dictionary.Types
 import Greek.Parsers.DictionaryParser
 import Control.Applicative
@@ -41,7 +55,15 @@ allKeys limit = do
 	Database m <- ask
 	return $ take limit $ M.toList m
 
+type Key = T.Text
+type Value = MorphEntry
+
+data Database = Database !(M.Map Key [Value])
+  deriving (Show,Eq,Typeable)
+
 $(makeAcidic ''Database ['insertKey, 'lookupKey, 'allKeys, 'deleteKey])
+
+$(deriveSafeCopy 0 'base ''Database)
 
 createMap :: T.Text -> MorphLookup
 createMap text = case A.parseOnly morphParser text of
@@ -56,5 +78,20 @@ createMap text = case A.parseOnly morphParser text of
 						M.insert lma [m] dictMap
 			process [] dictMap = dictMap
 
+createMapAS :: T.Text -> IO (AcidState Database)
+createMapAS text = do
+	db <- openLocalStateFrom "mydb/" (Database M.empty)
+	case A.parseOnly morphParser text of
+		Left err   -> error err
+		Right vals -> do
+			mapM_ (\m@(MorphEntry lma _ _ _ _) -> 
+				update db $ InsertKey lma m) 
+				vals
+			return db
+
+
 createMapFromFile :: FilePath -> IO MorphLookup
 createMapFromFile fp = createMap <$> I.readFile fp
+
+createMapASFile :: FilePath -> IO (AcidState Database)
+createMapASFile fp = I.readFile fp >>= createMapAS
