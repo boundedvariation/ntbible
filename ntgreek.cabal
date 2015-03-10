@@ -55,7 +55,7 @@ library
     Greek.Parsers.BetaParser
     Greek.Dictionary.Types
     Greek.Parsers.DictionaryParser
-    Greek.Dictionary.MorphologyMap
+    Greek.Dictionary.MorphologyDB
   
   -- Modules included in this library but not exported.
   -- other-modules:       
