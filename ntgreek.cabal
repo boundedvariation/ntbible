@@ -55,6 +55,7 @@ library
     Greek.Parsers.BetaParser
     Greek.Dictionary.Types
     Greek.Parsers.DictionaryParser
+    Greek.Dictionary.MorphologyMap
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -66,7 +67,10 @@ library
   build-depends:       base >=4.7 && <4.8,
                        attoparsec,
                        text,
-                       containers
+                       containers,
+                       mtl,
+                       acid-state,
+                       safecopy
   
   -- Directories containing source files.
   -- hs-source-dirs:      
