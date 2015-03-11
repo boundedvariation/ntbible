@@ -23,7 +23,7 @@ import Data.Acid
 import Data.Typeable
 import Data.SafeCopy
 import Greek.Dictionary.Types
-import Greek.Parsers.DictionaryParser
+import Greek.Parsers.MorphologyParser
 import Control.Applicative
 import Control.Monad.Reader (ask)
 import qualified Data.Text as T
