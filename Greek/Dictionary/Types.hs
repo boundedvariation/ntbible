@@ -30,6 +30,8 @@ module Greek.Dictionary.Types (
   , Numeral(..)
   , Degree(..)
   , Irregular(..)
+  , DictEntry(..)
+  , Translation(..)
   , Feature
   ) where
 
@@ -180,6 +182,20 @@ data Numeral = Numeral {
 
 data Irregular = Irregular deriving (Eq,Show,Typeable)
 
+data DictEntry = DictEntry {
+	dictKey :: T.Text
+  , dictID  :: T.Text
+  , dictOrth :: T.Text
+  , dictTrans :: [Translation]
+} deriving (Eq,Show,Typeable)
+
+data Translation = Translation {
+	transLevel  :: Int
+  , transN      :: Int
+  , transID     :: T.Text
+  , translation :: T.Text
+} deriving (Eq,Show,Typeable)
+
 $(deriveSafeCopy 0 'base ''Case)
 $(deriveSafeCopy 0 'base ''Degree)
 $(deriveSafeCopy 0 'base ''NumberGr)
@@ -205,3 +221,5 @@ $(deriveSafeCopy 0 'base ''Particle)
 $(deriveSafeCopy 0 'base ''Verb)
 $(deriveSafeCopy 0 'base ''Morphology)
 $(deriveSafeCopy 0 'base ''MorphEntry)
+$(deriveSafeCopy 0 'base ''Translation)
+$(deriveSafeCopy 0 'base ''DictEntry)
