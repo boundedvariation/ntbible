@@ -54,6 +54,7 @@ library
   exposed-modules:     
     Greek.Parsers.BetaParser
     Greek.Dictionary.Types
+    Greek.Parsers.MorphologyParser
     Greek.Parsers.DictionaryParser
     Greek.Dictionary.MorphologyDB
   
